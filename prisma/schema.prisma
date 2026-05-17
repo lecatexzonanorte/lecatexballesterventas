@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  image       String?
+  order       Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+
+model Product {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  description  String
+  price        Float
+  comparePrice Float?
+  unit         String   @default("unidad")
+  weight       Float    @default(1)
+  image        String
+  images       String   @default("[]")
+  category     String
+  categorySlug String
+  categoryId   String?
+  featured     Boolean  @default(false)
+  inStock      Boolean  @default(true)
+  stockQty     Int      @default(100)
+  colors       String   @default("[]")
+  sizes        String   @default("[]")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  categoryRel  Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  orderNumber   String      @unique
+  customerName  String
+  customerEmail String
+  customerPhone String
+  address       String
+  city          String
+  province      String
+  postalCode    String
+  items         OrderItem[]
+  subtotal      Float
+  shippingCost  Float
+  total         Float
+  shippingMethod String
+  paymentMethod String
+  paymentStatus String      @default("pending")
+  mpPreferenceId String?
+  status        String      @default("pending")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  name      String
+  price     Float
+  quantity  Int
+  color     String?
+  size      String?
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model ShippingRule {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  province    String?
+  minAmount   Float    @default(0)
+  cost        Float
+  freeAbove   Float?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
