@@ -1,0 +1,15 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Products: lectura pública
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    // Orders: escritura pública (para crear pedidos), lectura solo del propio pedido
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+  }
+}

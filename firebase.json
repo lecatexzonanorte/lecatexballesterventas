@@ -1,28 +1,6 @@
 {
-  "hosting": {
-    "public": ".",
-    "ignore": [
-      "firebase.json",
-      "**/node_modules/**",
-      "**/.git/**",
-      "package.json",
-      "package-lock.json",
-      "bun.lock",
-      "next.config.ts",
-      "tsconfig.json",
-      "tailwind.config.ts",
-      "postcss.config.mjs",
-      "eslint.config.mjs",
-      "next-env.d.ts",
-      "components.json",
-      "Caddyfile",
-      ".github/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
