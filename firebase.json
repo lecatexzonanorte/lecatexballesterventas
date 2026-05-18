@@ -1,10 +1,22 @@
 {
   "hosting": {
-    "public": ".next/static",
+    "public": ".",
     "ignore": [
       "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      "**/.git/**",
+      "package.json",
+      "package-lock.json",
+      "bun.lock",
+      "next.config.ts",
+      "tsconfig.json",
+      "tailwind.config.ts",
+      "postcss.config.mjs",
+      "eslint.config.mjs",
+      "next-env.d.ts",
+      "components.json",
+      "Caddyfile",
+      ".github/**"
     ],
     "rewrites": [
       {

@@ -1,5 +1,20 @@
-// ===== PRODUCT DATA =====
-const PRODUCTS = [
+// ===== FIREBASE INIT =====
+const firebaseConfig = {
+  apiKey: "AIzaSyDsGfmAF2cKLVWwUwYMXVdV3m5jJbVdGmk",
+  authDomain: "lecatexballesterventas.firebaseapp.com",
+  projectId: "lecatexballesterventas",
+  storageBucket: "lecatexballesterventas.firebasestorage.app",
+  messagingSenderId: "375721795523",
+  appId: "1:375721795523:web:74fd5a7aa240135c116776",
+  measurementId: "G-BZE2LHGGLE"
+};
+
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+const db = firebase.firestore();
+
+// ===== PRODUCT DATA (fallback local) =====
+const PRODUCTS_LOCAL = [
   { id:1, name:"Lecatex Plástico Clásico 20L", slug:"lecatex-plastico-clasico-20l", desc:"Revestimiento plástico de alta cobertura para exteriores. Resistente a la intemperie, lavable y de larga duración. Aplicación con rodillo o espátula.", price:45900, comparePrice:52000, unit:"balde 20L", img:"img/lecatex-plastico-20.jpg", cat:"Revestimientos Plásticos", catSlug:"revestimientos-plasticos", featured:true, colors:["Blanco","Beige","Gris claro","Terracota"], sizes:["4L","10L","20L"] },
   { id:2, name:"Lecatex Plástico Clásico 10L", slug:"lecatex-plastico-clasico-10l", desc:"Revestimiento plástico versátil para interiores y exteriores. Excelente cobertura y adherencia. Secado rápido y fácil de aplicar.", price:24900, comparePrice:28000, unit:"balde 10L", img:"img/lecatex-plastico-10.jpg", cat:"Revestimientos Plásticos", catSlug:"revestimientos-plasticos", featured:false, colors:["Blanco","Beige","Gris claro","Terracota"], sizes:["4L","10L","20L"] },
   { id:3, name:"Lecatex Plástico Clásico 4L", slug:"lecatex-plastico-clasico-4l", desc:"Revestimiento plástico en presentación chica ideal para refacciones o detalles. Misma calidad y resistencia en formato práctico.", price:12900, comparePrice:null, unit:"balde 4L", img:"img/lecatex-plastico-4.jpg", cat:"Revestimientos Plásticos", catSlug:"revestimientos-plasticos", featured:false, colors:["Blanco","Beige","Gris claro"], sizes:["4L"] },
@@ -35,12 +50,82 @@ const SHIPPING_RULES = [
 ];
 
 // ===== STATE =====
+let PRODUCTS = [...PRODUCTS_LOCAL]; // Start with local, then override from Firestore
 let cart = JSON.parse(localStorage.getItem('lecatex_cart') || '[]');
 let currentView = 'home';
 let currentCategory = null;
 let searchQuery = '';
 let selectedShipping = null;
 let checkoutStep = 1;
+let _firestoreReady = false;
+
+// ===== FIREBASE: Load products from Firestore =====
+async function loadProductsFromFirestore() {
+  try {
+    const snapshot = await db.collection('products').orderBy('id').get();
+    if (!snapshot.empty) {
+      PRODUCTS = snapshot.docs.map(doc => {
+        const d = doc.data();
+        return {
+          id: d.id,
+          name: d.name,
+          slug: d.slug,
+          desc: d.desc,
+          price: d.price,
+          comparePrice: d.comparePrice || null,
+          unit: d.unit,
+          img: d.img,
+          cat: d.cat,
+          catSlug: d.catSlug,
+          featured: d.featured || false,
+          colors: d.colors || [],
+          sizes: d.sizes || []
+        };
+      });
+      console.log(`[Firebase] ${PRODUCTS.length} productos cargados desde Firestore`);
+    } else {
+      console.log('[Firebase] No hay productos en Firestore, usando datos locales');
+      // Seed Firestore with local data on first run
+      await seedProducts();
+    }
+    _firestoreReady = true;
+    render(); // Re-render with Firestore data
+  } catch (err) {
+    console.error('[Firebase] Error cargando productos:', err);
+    console.log('[App] Usando datos locales como fallback');
+  }
+}
+
+// ===== FIREBASE: Seed products to Firestore (first run) =====
+async function seedProducts() {
+  try {
+    const batch = db.batch();
+    PRODUCTS_LOCAL.forEach(p => {
+      const ref = db.collection('products').doc(String(p.id));
+      batch.set(ref, p);
+    });
+    await batch.commit();
+    console.log(`[Firebase] ${PRODUCTS_LOCAL.length} productos guardados en Firestore`);
+  } catch (err) {
+    console.error('[Firebase] Error guardando productos iniciales:', err);
+  }
+}
+
+// ===== FIREBASE: Save order to Firestore =====
+async function saveOrderToFirestore(orderData) {
+  try {
+    const docRef = await db.collection('orders').add({
+      ...orderData,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'pendiente'
+    });
+    console.log('[Firebase] Pedido guardado con ID:', docRef.id);
+    return docRef.id;
+  } catch (err) {
+    console.error('[Firebase] Error guardando pedido:', err);
+    return null;
+  }
+}
 
 // ===== FORMAT =====
 function fmt(n) {
@@ -555,12 +640,53 @@ function checkoutNext() {
   renderCheckout();
 }
 
-function confirmOrder() {
+async function confirmOrder() {
   const orderNum = 'LCX-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
   const total = getSubtotal() + (selectedShipping?.cost || 0);
+
+  // Build order data for Firestore
+  const orderData = {
+    orderNumber: orderNum,
+    customer: {
+      name: document.getElementById('ckName')?.value || '',
+      email: document.getElementById('ckEmail')?.value || '',
+      phone: document.getElementById('ckPhone')?.value || '',
+      address: document.getElementById('ckAddr')?.value || '',
+      city: document.getElementById('ckCity')?.value || '',
+      province: document.getElementById('ckProv')?.value || '',
+      zip: document.getElementById('ckZip')?.value || ''
+    },
+    items: cart.map(i => ({
+      id: i.id,
+      name: i.name,
+      price: i.price,
+      qty: i.qty,
+      color: i.color,
+      size: i.size,
+      unit: i.unit,
+      subtotal: i.price * i.qty
+    })),
+    shipping: {
+      method: selectedShipping?.id || 'pickup',
+      cost: selectedShipping?.cost || 0
+    },
+    payment: {
+      method: _payMethod
+    },
+    subtotal: getSubtotal(),
+    shippingCost: selectedShipping?.cost || 0,
+    total: total
+  };
+
+  // Save order to Firebase Firestore
+  const firebaseId = await saveOrderToFirestore(orderData);
+
+  // Clear cart
   cart = [];
   saveCart();
   selectedShipping = null;
+
+  // Show confirmation
   document.getElementById('checkoutContent').innerHTML = `
     <div style="text-align:center;padding:24px 0">
       <div class="success-icon">✅</div>
@@ -568,6 +694,7 @@ function confirmOrder() {
       <p style="color:var(--muted);margin-bottom:24px">Tu pedido ha sido procesado exitosamente. Recibirás un email con los detalles.</p>
       <div class="checkout-summary" style="text-align:left">
         <div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="label">Pedido</span><span style="font-family:monospace;background:var(--warm-bg);padding:4px 10px;border-radius:6px;font-size:13px">${orderNum}</span></div>
+        ${firebaseId ? `<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span class="label">ID Firebase</span><span style="font-family:monospace;background:var(--warm-bg);padding:4px 10px;border-radius:6px;font-size:11px">${firebaseId}</span></div>` : ''}
         <div style="display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin-top:8px"><span>Total</span><span style="color:var(--orange)">${fmt(total)}</span></div>
       </div>
       <button class="btn btn-primary btn-lg" style="margin-top:20px" onclick="closeCheckout();navigate('home')">Volver al inicio</button>
@@ -588,3 +715,5 @@ function closeCheckoutModal(e) {
 // ===== INIT =====
 updateCartCount();
 render();
+// Load products from Firebase Firestore (async, re-renders when ready)
+loadProductsFromFirestore();
