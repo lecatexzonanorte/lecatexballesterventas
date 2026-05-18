@@ -54,11 +54,11 @@ input, select { font: inherit; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 20px; gap: 16px;
 }
-.logo { display: flex; align-items: center; gap: 10px; }
+.logo { display: flex; align-items: center; gap: 0; }
 .logo img { height: 38px; width: auto; }
 .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
-.logo-name { font-size: 15px; font-weight: 700; color: var(--dark); }
-.logo-location { font-size: 11px; font-weight: 500; color: var(--orange); letter-spacing: 0.5px; }
+.logo-name { font-family: 'Arial Black', 'Arial', sans-serif; font-size: 20px; font-weight: 900; color: var(--dark); letter-spacing: -0.5px; }
+.logo-location { font-family: 'Arial', sans-serif; font-size: 13px; font-weight: 700; font-style: italic; color: var(--orange); letter-spacing: 0.3px; }
 .nav-desktop { display: flex; gap: 4px; }
 .nav-link {
   padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
@@ -505,7 +505,8 @@ input, select { font: inherit; }
 @media (max-width: 768px) {
   .nav-desktop { display: none; }
   .menu-toggle { display: flex; }
-  .logo-text { display: none; }
+  .logo-name { font-size: 16px; }
+  .logo-location { font-size: 11px; }
   .hero { min-height: 400px; }
   .hero h1 { font-size: 28px; }
   .hero-sub { font-size: 20px; }
