@@ -210,9 +210,9 @@ function renderHome() {
     <div class="section">
       <div class="ship-grid">
         <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><h4>Envío Gratis</h4><p>En compras mayores a $50.000 en CABA</p></div>
-        <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div><h4>Promociones</h4><p>Descuentos especiales por cantidad</p></div>
+        <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h4>Franquicia Oficial</h4><p>Productos originales Lecatex garantizados</p></div>
         <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div><h4>MercadoPago</h4><p>Pagá con tarjeta, transferencia o efectivo</p></div>
-        <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>Asesoramiento</h4><p>Consultanos por WhatsApp o teléfono</p></div>
+        <div class="ship-card"><div class="ship-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h4>Villa Ballester</h4><p>Retiro en sede o envío a domicilio</p></div>
       </div>
     </div>
   `;
@@ -223,10 +223,10 @@ function renderHero() {
     <div class="hero">
       <div class="hero-bg"></div>
       <div class="hero-content">
-        <span class="hero-badge">CALIDAD ARGENTINA</span>
-        <h1>Revestimientos <span>Lecatex</span></h1>
-        <div class="hero-sub">Calidad que se ve</div>
-        <p class="hero-desc">Más de 20 años acompañando a profesionales del sector construcción con revestimientos plásticos, texturados y al agua de primera calidad.</p>
+        <span class="hero-badge">FRANQUICIA OFICIAL LECATEX</span>
+        <h1>Lecatex Express <span>Villa Ballester</span></h1>
+        <div class="hero-sub">Tu tienda online de revestimientos</div>
+        <p class="hero-desc">Somos la franquicia oficial Lecatex en Villa Ballester. Comprá online los mejores revestimientos plásticos, texturados y al agua con envío a todo el país.</p>
         <div class="hero-btns">
           <button class="btn btn-primary btn-lg" onclick="navigate('products')">Ver Productos →</button>
           <button class="btn-outline-white" onclick="navigate('products')">Explorar Categorías</button>
@@ -240,8 +240,8 @@ function renderBenefits() {
   return `
     <div class="benefits">
       <div class="benefit"><div class="benefit-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div><div><h4>Envío a todo el país</h4><p>Gratis en compras +$50.000</p></div></div>
-      <div class="benefit"><div class="benefit-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Garantía de calidad</h4><p>Productos certificados</p></div></div>
-      <div class="benefit"><div class="benefit-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>Asesoramiento profesional</h4><p>Lun-Vie 8:00-18:00</p></div></div>
+      <div class="benefit"><div class="benefit-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div><h4>Franquicia oficial Lecatex</h4><p>Productos originales garantizados</p></div></div>
+      <div class="benefit"><div class="benefit-icon"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><h4>Atención en Villa Ballester</h4><p>Lun-Vie 8-18 | Sáb 8-13</p></div></div>
     </div>
   `;
 }

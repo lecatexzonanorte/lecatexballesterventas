@@ -54,7 +54,11 @@ input, select { font: inherit; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 20px; gap: 16px;
 }
+.logo { display: flex; align-items: center; gap: 10px; }
 .logo img { height: 38px; width: auto; }
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-name { font-size: 15px; font-weight: 700; color: var(--dark); }
+.logo-location { font-size: 11px; font-weight: 500; color: var(--orange); letter-spacing: 0.5px; }
 .nav-desktop { display: flex; gap: 4px; }
 .nav-link {
   padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500;
@@ -477,7 +481,8 @@ input, select { font: inherit; }
   max-width: 1200px; margin: 0 auto; padding: 48px 20px 32px;
   display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px;
 }
-.footer-brand { color: var(--orange); font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+.footer-brand { color: var(--orange); font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.footer-franchise { font-size: 12px; font-weight: 600; color: var(--orange-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
 .footer-col h4 {
   color: var(--orange-light); font-size: 12px; text-transform: uppercase;
   letter-spacing: 1px; margin-bottom: 12px; font-weight: 600;
@@ -500,6 +505,7 @@ input, select { font: inherit; }
 @media (max-width: 768px) {
   .nav-desktop { display: none; }
   .menu-toggle { display: flex; }
+  .logo-text { display: none; }
   .hero { min-height: 400px; }
   .hero h1 { font-size: 28px; }
   .hero-sub { font-size: 20px; }
